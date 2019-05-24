@@ -1,19 +1,20 @@
 # build bootstrap Go 1.4 which doesn't depend on Go to build itself
 
-mkdir -p go1.4-boostrap/build
-cd go1.4-boostrap/build
+mkdir -p go1.4-bootstrap/build
+cd go1.4-bootstrap/build
 
-download https://dl.google.com/go/go1.4-bootstrap-20171003.tar.gz
+if [[ ${ARCH} == "x86_64 " ]]; then
+	download https://dl.google.com/go/go1.4-bootstrap-20171003.tar.gz
+	cd ../src
+	sh make.bash
+	cd ..
+	export GOROOT_BOOTSTRAP="$PWD"
+	cd ..
+else
+	tar -xvf /go-linux-arm64-bootstrap.tbz --strip-components=1
+	export GOROOT_BOOTSTRAP="$PWD"
+fi
 
-cd ../src
-
-sh make.bash
-
-cd ..
-
-export GOROOT_BOOTSTRAP="$PWD"
-
-cd ..
 
 # build desired Go version using bootstrap Go 1.4
 
